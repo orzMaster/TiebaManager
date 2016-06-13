@@ -235,4 +235,9 @@ $RECYCLE.BIN/
 !Library/bin/Release/
 发布用/opencv_world300.dll
 历史备份
-IgnoreBefore
+User
+Option
+options.xml
+ImageCache
+admin.txt
+*.db

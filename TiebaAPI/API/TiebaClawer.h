@@ -45,7 +45,7 @@ public:
 	CString tid;		// 主题ID
 	CString author;		// 作者
 	CString authorID;	// 作者ID
-
+	CString create;		// 创建时间
 	
 	TBObject(TBObjectType type);
 	virtual ~TBObject() = default;

@@ -69,6 +69,7 @@ BOOL CExplorePostPage::OnInitDialog()
 	m_list.InsertColumn(i++, _T(""), LVCFMT_LEFT, 0);
 	m_list.InsertColumn(i++, _T("楼层"), LVCFMT_RIGHT, 50);
 	m_list.InsertColumn(i++, _T("内容"), LVCFMT_LEFT, 540);
+	m_list.InsertColumn(i++, _T("日期"), LVCFMT_CENTER, 130);
 	m_list.InsertColumn(i++, _T("作者"), LVCFMT_CENTER, 130);
 	m_list.DeleteColumn(0); // 解决第一列文字不能右对齐的问题
 
@@ -103,7 +104,8 @@ void CExplorePostPage::OnBnClickedButton1()
 		int index = m_list.GetItemCount();
 		m_list.InsertItem(index, i.floor);
 		m_list.SetItemText(index, 1, i.content);
-		m_list.SetItemText(index, 2, i.author);
+		m_list.SetItemText(index, 2, i.create);
+		m_list.SetItemText(index, 3, i.author);
 	}
 	exploreLzlPage.m_list.DeleteAllItems();
 	for (const LzlInfo& i : exploreLzlPage.m_lzls)
@@ -111,7 +113,8 @@ void CExplorePostPage::OnBnClickedButton1()
 		int index = exploreLzlPage.m_list.GetItemCount();
 		exploreLzlPage.m_list.InsertItem(index, i.floor);
 		exploreLzlPage.m_list.SetItemText(index, 1, i.content);
-		exploreLzlPage.m_list.SetItemText(index, 2, i.author);
+		exploreLzlPage.m_list.SetItemText(index, 2, i.create);
+		exploreLzlPage.m_list.SetItemText(index, 3, i.author);
 	}
 
 	m_gotoButton.EnableWindow(TRUE);

@@ -34,6 +34,8 @@ const TCHAR THREAD_REPLY_LEFT[] = _T("&quot;reply_num&quot;:");
 const TCHAR THREAD_REPLY_RIGHT[] = _T(",");
 const TCHAR THREAD_TITLE_LEFT[] = _T(R"(class="j_th_tit ">)");
 const TCHAR THREAD_TITLE_RIGHT[] = _T("</a>");
+const TCHAR THREAD_CREATE_LEFT[] = _T("title=\"创建时间\">");
+const TCHAR THREAD_CREATE_RIGHT[] = _T("</span>");
 const TCHAR THREAD_PREVIEW_LEFT[] = _T(R"(threadlist_abs_onlyline ">)");
 const TCHAR THREAD_PREVIEW_RIGHT[] = _T("</div>");
 const TCHAR THREAD_MEDIA_LEFT[] = _T("<ul class=\"threadlist_media");
@@ -63,6 +65,8 @@ const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
 const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
 const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
 const TCHAR POST_SIGN_RIGHT[] = _T("/>");
+const TCHAR POST_CREATE_LEFT[] = _T("楼</span><span class=\"tail-info\">");
+const TCHAR POST_CREATE_RIGHT[] = _T("</span>");
 #pragma endregion
 #pragma region 楼中楼列表
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
@@ -155,15 +159,17 @@ TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThr
 		threads[iThreads].author = JSUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_LEFT, THREAD_AUTHOR_RIGHT));
 		threads[iThreads].authorID = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
 
+		threads[iThreads].create = GetStringBetween(rawThreads[iRawThreads], THREAD_CREATE_LEFT, THREAD_CREATE_RIGHT);
+
 		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
 		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
 		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT).Trim())
 			+ _T("\r\n") + GetStringBetween2(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
 		threads[iThreads].lastAuthor = GetStringBetween(rawThreads[iRawThreads], THREAD_LAST_AUTHOR_LEFT, THREAD_LAST_AUTHOR_RIGHT);
 
-		//OutputDebugString(_T("\n"));
+		//OutputDebugString(_T("\n----------------------------------\n"));
 		//OutputDebugString(rawThreads[iRawThreads]);
-		//OutputDebugString(_T("\n----------------------------------"));
+		//OutputDebugString(_T("\n----------------------------------\n"));
 	}
 
 	return TRUE;
@@ -214,9 +220,11 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 		// 签名档
 		posts[iPosts].content += _T("\r\n") + GetStringBetween2(rawPosts[iRawPosts], POST_SIGN_LEFT, POST_SIGN_RIGHT);
 
-		//OutputDebugString(_T("\n"));
+		posts[iPosts].create = GetStringBetween(rawPosts[iRawPosts], POST_CREATE_LEFT, POST_CREATE_RIGHT);
+
+		//OutputDebugString(_T("\n----------------------------------\n"));
 		//OutputDebugString(rawPosts[iRawPosts]);
-		//OutputDebugString(_T("\n----------------------------------"));
+		//OutputDebugString(_T("\n----------------------------------\n"));
 	}
 
 	return GET_POSTS_SUCCESS;
