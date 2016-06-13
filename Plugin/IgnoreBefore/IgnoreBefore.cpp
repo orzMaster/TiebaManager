@@ -58,4 +58,37 @@ void CIgnoreBefore::OnConfig()
 		AfxMessageBox(_T("请先确认贴吧！"), MB_ICONERROR);
 		return;
 	}
+
+	if (m_ignoreBeforeDlg == NULL)
+	{
+		m_ignoreBeforeDlg = new CIgnoreBeforeDlg(m_ignoreBeforeDlg);
+		m_ignoreBeforeDlg->Create(m_ignoreBeforeDlg->IDD, CWnd::GetDesktopWindow());
+	}
+}
+
+void CIgnoreBefore::StartIgnoreBefore()
+{
+	StopIgnoreBefore();
+	if (m_ignoreBeforeThread != nullptr && m_ignoreBeforeThread->joinable())
+		m_ignoreBeforeThread->join();
+	m_ignoreBeforeThread.reset(new thread(&CIgnoreBefore::IgnoreBeforeThread, this));
+}
+
+void CIgnoreBefore::StopIgnoreBefore()
+{
+	m_stopFlag = TRUE;
+}
+
+void CIgnoreBefore::IgnoreBeforeThread()
+{
+	m_stopFlag = FALSE;
+
+	// 初始化
+	if (!CoInitializeHelper())
+		return;
+
+	ILog& log = *CTBMAPI::GetLog();
+	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
+	CTBMOperate& operate = *CTBMAPI::GetOperate();
+
 }
